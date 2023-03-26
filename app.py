@@ -1,5 +1,6 @@
 # from ast import If
 # from turtle import width
+# from unicodedata import name
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -11,127 +12,78 @@ from sklearn.metrics import accuracy_score
 
 st.title("DIABETES PREDICTION")
 
-df = pd.read_csv("C:\python\streamlit_diabetes\diabetes_csv_dataset.csv") 
+df = pd.read_csv("diabetes_csv_dataset.csv") 
 # pd.read_csv
-
-
-nav = st.sidebar.radio("OPTIONS",["HOME","PREVIEW","CONTRIBUTE"])
-if nav == "HOME":
+def validation (name):
     
-    image = Image.open('C:\python\streamlit_diabetes\DIABETES.jpg')
+        for char in name:
+            if  not (("A" <= char and char <= "Z") or ("a" <= char and char <= "z") or (char == " ")):
+                return False
+        return True
+
+tab1, tab2, tab3,tab4,tab5,tab6 = st.tabs(["𝐇𝐎𝐌𝐄","        ", "        ","        ", "𝐂𝐇𝐄𝐂𝐊𝐔𝐏","        "])
+with tab1:
+    st.write("")
+    st.title('WELCOME TO OUR DIABETES PAGE')
+    image = Image.open("DIABETES.jpg")
     st.write("")
     st.image(image,width=700)
+
+    st.write('')
     
-if nav == "PREVIEW":
-    if st.checkbox("PREVIEW DATASET"):
-        data=df
-        if st.button("HEAD"):
-            st.write(df.head())
-        if st.button("SHAPE"):
-            st.write(df.shape)
-        if st.button("DESCRIBE"):
-            st.write(df.describe())
-        if st.button("COUNTS"):
-            st.write(df['Outcome'].value_counts())
-        if st.button("GROUPBY_MEAN"):
-            st.write(df.groupby('Outcome').mean())
-            st.write("fix")
-        if st.button("DROP_OUTCOME"):
-            df.groupby('Outcome').mean()
-            X= df.drop(columns = 'Outcome', axis=1)
-            st.write(X)
-        if st.button("OUTCOME"):
-            re = df.groupby('Outcome').mean()
-            Y = df['Outcome']
-            n = np.array(Y)
-            # st.write(n.shape)
-            nd=n.reshape([2,8])
-            st.write(nd)
-        if st.button("STD DATA"):
-            scaler = StandardScaler()
-            X = df.drop(columns = 'Outcome', axis=1)
-            scaler.fit(X)
-            standardized_data = scaler.transform(X)
-            st.write(standardized_data)
-        
-        scaler = StandardScaler()
-        X = df.drop(columns = 'Outcome', axis=1)
-        scaler.fit(X)
-        standardized_data = scaler.transform(X)
-        X = standardized_data
-        Y = df['Outcome']
-        X_train, X_test, Y_train, Y_test = train_test_split(X,Y, test_size = 0.2, stratify=Y, random_state=2)
-        sh = st.radio("SELECT THE SHAPE",["X-SHAPE","X TRAIN SHAPE","X TEST SHAPE"])
-        if sh == "X-SHAPE":
-            st.write(X.shape)
-        if sh=="X TRAIN SHAPE":
-            st.write(X_train.shape)
-        if sh=="X TEST SHAPE":
-            st.write(X_test.shape)
-    scaler = StandardScaler()
-    X = df.drop(columns = 'Outcome', axis=1)
-    scaler.fit(X)
-    standardized_data = scaler.transform(X)
-    X = standardized_data
-    Y = df['Outcome']
-    X_train, X_test, Y_train, Y_test = train_test_split(X,Y, test_size = 0.2, stratify=Y, random_state=2)
-    classifier = svm.SVC(kernel='linear')
-    classifier.fit(X_train, Y_train)
-    if st.button("ACCURACY OF TRAIN DATA"):
-        X_train_prediction = classifier.predict(X_train)
-        training_data_accuracy = accuracy_score(X_train_prediction, Y_train)
-        st.write('Accuracy score of the training data : ', training_data_accuracy)
-    if st.button("ACCURACY OF TEST DATA"):
-        X_test_prediction = classifier.predict(X_test)
-        test_data_accuracy = accuracy_score(X_test_prediction, Y_test)
-        st.write('Accuracy score of the test data : ', test_data_accuracy)
-if nav == "CONTRIBUTE":
+    st.header('𝐒𝐘𝐌𝐏𝐓𝐎𝐌𝐒 𝐀𝐋𝐄𝐑𝐓 :')
+    st.write('')
+    video_file = open('home_page_video.mp4','rb')
+    video_bytes = video_file.read()
+    st.video(video_bytes)
+    
+    
+with tab5:
 
-
-    # st.write("")
-    # st.subheader("SURNAME:")
-    # sr = st.text_input('','Please enter here...!')
+    st.subheader("𝗘𝗡𝗧𝗘𝗥 𝗬𝗢𝗨𝗥 𝗡𝗔𝗠𝗘 :")
+    st.write('')
+    st.info('𝐍𝐀𝐌𝐄 𝐈𝐍 𝐀𝐀𝐃𝐇𝐀𝐀𝐑 𝐂𝐀𝐑𝐃')
+    name_inp = st.text_input('','')
+    result = validation(name_inp)
+    if result == True:
+        name_input = name_inp
+    else:
+        st.warning('𝐏𝐥𝐞𝐚𝐬𝐞 𝐞𝐧𝐭𝐞𝐫 𝐚 𝐯𝐚𝐥𝐢𝐝 𝐧𝐚𝐦𝐞..!!')
 
 
     st.write("")
-    st.subheader("ENTER YOUR NAME:")
-    name_input = st.text_input('','Please enter here...!')
-
-    
-
-
-    st.write("")
-    st.subheader("PREGNANCY:")
+    st.subheader("𝗣𝗥𝗘𝗚𝗡𝗔𝗡𝗖𝗬 :")
     preg = st.slider('', 0, 20, 0)
 
     st.write("")
-    st.subheader("GLUCOSE:")
+    st.subheader("𝗚𝗟𝗨𝗖𝗢𝗦𝗘 :")
     glu = st.slider('', 0, 500, 0)
 
     st.write("")
-    st.subheader("BLOOD PRESSURE:")
+    st.subheader("𝗕𝗟𝗢𝗢𝗗 𝗣𝗥𝗘𝗦𝗦𝗨𝗥𝗘 :")
     bp = st.slider('', 0, 200, 0)
 
     st.write("")
-    st.subheader("SKIN THICKNESS:")
+    st.subheader("𝗦𝗞𝗜𝗡 𝗧𝗛𝗜𝗖𝗞𝗡𝗘𝗦𝗦 :")
     skin = st.slider('', 0, 100, 0)
 
     st.write("")
-    st.subheader("INSULIN:")
+    st.subheader("𝗜𝗡𝗦𝗨𝗟𝗜𝗡 :")
     insulin = st.slider('', 0, 1000, 0)
 
     
-    st.write("")
-    st.subheader("BMI:")
-    bmi = st.number_input('ENTER YOUR BMI VALUE')
+    
+    st.subheader("𝗕𝗠𝗜 :")
+    bmi = st.number_input('𝐄𝐍𝐓𝐄𝐑 𝐘𝐎𝐔𝐑 𝐁𝐌𝐈 𝐕𝐀𝐋𝐔𝐄')
 
     st.write("")
-    st.subheader("DIABETES PEDIGREE FUNCTION:")
-    dpf = st.number_input('ENTER YOUR DPF VALUE')
+    st.subheader("𝗗𝗜𝗔𝗕𝗘𝗧𝗘𝗦 𝗣𝗘𝗗𝗜𝗚𝗥𝗘𝗘 𝗙𝗨𝗡𝗖𝗧𝗜𝗢𝗡 :")
+    dpf = st.number_input('𝐄𝐍𝐓𝐄𝐑 𝐘𝐎𝐔𝐑 𝐃𝐏𝐅 𝐕𝐀𝐋𝐔𝐄')
 
     st.write("")
-    st.subheader("AGE:")
-    a_g_e = st.number_input('ENTER YOUR AGE')
+    st.subheader("𝗔𝗚𝗘 :")
+    a_g_e = st.number_input('𝐄𝐍𝐓𝐄𝐑 𝐘𝐎𝐔𝐑 𝐀𝐆𝐄')
+    st.write('')
 
     
 
@@ -146,7 +98,7 @@ if nav == "CONTRIBUTE":
     classifier = svm.SVC(kernel='linear')
     classifier.fit(X_train, Y_train)
 
-    if st.button("   RESULT   "):
+    if st.button("𝐑𝐄𝐒𝐔𝐋𝐓"):
 
         input_data = (preg,glu,bp,skin,insulin,bmi,dpf,a_g_e)
 
@@ -164,21 +116,15 @@ if nav == "CONTRIBUTE":
         
 
         if (prediction[0] == 0):
-            st.write(name_input,"IS NOT AFFECTED WITH DIABETES")
+            st.write('')
+            st.success("{} IS NOT AFFECTED WITH DIABETES".format(name_input))
+            
         else:
-            st.write(name_input,"IS DIABETIC")
-
-
-
-
-    
-    
-    
-
-
-
-
-
-
-
-    
+            st.write('')
+            st.success("{} IS DIABETIC".format(name_input))
+            st.write('')
+            st.header('𝐇𝐄𝐑𝐄 𝐀𝐑𝐄 𝐓𝐇𝐄 𝐑𝐄𝐌𝐄𝐃𝐈𝐄𝐒..!!\n 𝐏𝐋𝐄𝐀𝐒𝐄 𝐖𝐀𝐓𝐂𝐇 𝐈𝐓')
+            st.write('')
+            video_file = open('result_video.mp4','rb')
+            video_bytes = video_file.read()
+            st.video(video_bytes)
